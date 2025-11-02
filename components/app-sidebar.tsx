@@ -48,32 +48,32 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/overview",
       icon: IconDashboard,
     },
     {
       title: "Jobs",
-      url: "#",
+      url: "/jobs",
       icon: IconListDetails,
     },
     {
       title: "Leads",
-      url: "#",
+      url: "/leads",
       icon: IconRoute,
     },
     {
       title: "Quotes",
-      url: "#",
+      url: "/quotes",
       icon: IconFolder,
     },
     {
       title: "Companies",
-      url: "#",
+      url: "/companies",
       icon: IconBuilding,
     },
     {
       title: "Customers",
-      url: "#",
+      url: "/clients",
       icon: IconUsersGroup,
     }
   ],
@@ -128,7 +128,7 @@ const data = {
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/settings",
       icon: IconSettings,
     },
     {
@@ -145,22 +145,24 @@ const data = {
   documents: [
     {
       name: "Team",
-      url: "#",
+      url: "/team",
       icon: IconUsers,
     },
     {
       name: "Reports",
-      url: "#",
+      url: "/reports",
       icon: IconReport,
     },
+  ],
+  comingSoon: [
     {
       name: "Communication",
-      url: "#",
+      url: "/communication",
       icon: IconMessage2Bolt,
     },
     {
       name: "Invoices",
-      url: "#",
+      url: "/invoicing",
       icon: IconCurrencyDollar,
     },
   ],
@@ -176,7 +178,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <a href="/overview">
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Acme Inc.</span>
               </a>
@@ -187,6 +189,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
+        <NavDocuments items={data.comingSoon} label="Coming Soon" isComingSoon={true} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

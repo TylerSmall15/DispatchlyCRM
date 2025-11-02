@@ -1,0 +1,301 @@
+---
+alwaysApply: true
+Description: Code commenting standards for consistent, production-ready documentation
+---
+
+# Code Commenting Standards for DispatchlyCRM
+
+## File Header Comment Block (Required for all files)
+
+Every file must start with a JSDoc-style block comment with the following structure:
+
+```typescript
+/**
+ * [FILE/COMPONENT NAME IN ALL CAPS]
+ * 
+ * Purpose:
+ * [1-2 sentence clear explanation of what this file/component does and why it exists]
+ * 
+ * Key Features:
+ * - [Feature 1]: Brief description
+ * - [Feature 2]: Brief description
+ * - [Feature 3]: Brief description
+ * 
+ * Data Flow:
+ * - [State management approach]
+ * - [Mock/real data usage]
+ * - [How data updates propagate]
+ * - [Real-time behavior notes]
+ * 
+ * Integration Points:
+ * - [Backend API readiness notes]
+ * - [ID generation patterns]
+ * - [Future extension points]
+ */
+```
+
+**Example:**
+```typescript
+/**
+ * JOBS PAGE COMPONENT
+ * 
+ * Purpose:
+ * Operational hub for managing job scheduling, assignments, and tracking.
+ * Enables dispatchers and managers to view, create, edit, and delete jobs.
+ * 
+ * Key Features:
+ * - Job Data Table: Displays all jobs with filtering, sorting, and pagination
+ * - Create Job Dialog: Modal form for scheduling new jobs
+ * - Status Management: Visual badges for Scheduled, In Progress, and Completed statuses
+ * 
+ * Data Flow:
+ * - Client-side state management using React hooks (useState)
+ * - Mock data initialized with 8 sample jobs
+ * - CRUD operations update local state (ready for API integration)
+ * 
+ * Integration Points:
+ * - Ready for backend API: Replace mockJobs with API calls
+ * - Job IDs auto-generated with sequential numbering (JOB-001, JOB-002, etc.)
+ */
+```
+
+---
+
+## Interface/Type Documentation
+
+All interfaces and types must have:
+
+1. **ALL CAPS title** describing the interface
+2. **Brief description** of what it represents
+3. **JSDoc @param tags** for each field
+4. **Group Required vs Optional** fields with clear labels
+
+```typescript
+/**
+ * JOB INTERFACE
+ * 
+ * Defines the data structure for a job record.
+ * 
+ * Required Fields:
+ * @param {string} id - Unique identifier (format: JOB-XXX)
+ * @param {string} lead - Customer/client name
+ * @param {string} phone - Contact phone number
+ * 
+ * Optional Fields:
+ * @param {string} description - Detailed job description/scope of work
+ * @param {string} notes - Internal notes, special instructions
+ */
+export interface Job {
+  id: string
+  lead: string
+  phone: string
+  description?: string
+  notes?: string
+}
+```
+
+---
+
+## Section Dividers (for organizing code)
+
+Use decorative section comments to separate logical code sections:
+
+```typescript
+// ==================== STATE MANAGEMENT ====================
+
+// ==================== EVENT HANDLERS ====================
+
+// ==================== COMPUTED VALUES ====================
+
+// ==================== RENDER ====================
+```
+
+**Section names must be:**
+- ALL CAPS
+- Between `====================` dividers
+- Used for: STATE MANAGEMENT, EVENT HANDLERS, COMPUTED VALUES, RENDER, CONSTANTS, HELPERS
+
+---
+
+## Mock Data Comments
+
+All mock data must be documented with:
+
+```typescript
+/**
+ * MOCK [DATA TYPE] DATA
+ * 
+ * [Brief explanation of what this mock data represents]
+ * In production, this would be replaced with [API/database description].
+ * 
+ * Data includes:
+ * - [Notable data characteristic 1]
+ * - [Notable data characteristic 2]
+ * - [Notable data characteristic 3]
+ */
+const mockJobs: Job[] = [
+  // ...data
+]
+```
+
+---
+
+## Function/Handler Comments
+
+All significant functions and event handlers must include:
+
+1. **ALL CAPS function name as title**
+2. **Description** of what it does
+3. **Process steps** (if multi-step)
+4. **JSDoc @param** for parameters
+5. **JSDoc @returns** if applicable
+
+```typescript
+/**
+ * CREATE JOB HANDLER
+ * 
+ * Handles the creation of a new job record.
+ * 
+ * Process:
+ * 1. Receives job data without an ID (Omit<Job, "id">)
+ * 2. Auto-generates sequential ID (JOB-001, JOB-002, etc.)
+ * 3. Adds new job to the beginning of the jobs array (most recent first)
+ * 4. Closes the create dialog
+ * 
+ * @param {Omit<Job, "id">} newJob - Job data without ID field
+ */
+const handleCreateJob = (newJob: Omit<Job, "id">) => {
+  // Implementation
+}
+```
+
+---
+
+## JSX/TSX Component Comments
+
+For component sections within render:
+
+### Multi-line Feature Comments:
+```tsx
+{/* 
+  JOBS DATA TABLE COMPONENT
+  
+  Main table displaying all job records with full CRUD functionality.
+  
+  Features:
+  - Sortable columns (click header to sort)
+  - Drag-and-drop row reordering
+  - Multi-row selection with checkboxes
+  - Status badges with color coding:
+    * Scheduled - Yellow badge
+    * In Progress - Blue badge
+    * Completed - Green badge
+  
+  Props:
+  - jobs: Array of job records to display
+  - onUpdateJob: Callback when job is edited
+  - onDeleteJob: Callback when job is deleted
+*/}
+<JobsDataTable
+  jobs={jobs}
+  onUpdateJob={handleUpdateJob}
+  onDeleteJob={handleDeleteJob}
+/>
+```
+
+### Single-line Section Comments:
+```tsx
+{/* PAGE HEADER: Displays breadcrumb navigation and page title */}
+<SiteHeader title="Jobs" />
+
+{/* MAIN CONTENT CONTAINER: Full height flex layout */}
+<div className="flex flex-1 flex-col">
+```
+
+---
+
+## Inline Code Comments
+
+Use single-line comments for clarification:
+
+```typescript
+// Generate ID: JOB-XXX where XXX is zero-padded number
+id: `JOB-${String(jobs.length + 1).padStart(3, "0")}`
+
+// Prepend new job to list (most recent first)
+setJobs([job, ...jobs])
+
+// In production: Implement actual date range logic
+if (dateRange !== "all") {
+  // TODO: Add date filtering
+}
+```
+
+---
+
+## Constants and Configuration
+
+```typescript
+/**
+ * AVAILABLE METRICS
+ * 
+ * List of all metrics that can be included in generated reports.
+ * Used to populate the metric selection checkboxes in the Generate Report dialog.
+ */
+const AVAILABLE_METRICS = [
+  "Revenue",
+  "Jobs Completed",
+  "Leads Converted",
+]
+```
+
+---
+
+## Commenting Best Practices
+
+### DO:
+✅ Use ALL CAPS for titles and major section headers
+✅ Provide context about "why" not just "what"
+✅ Document integration points for future development
+✅ Use consistent section dividers (`====================`)
+✅ Include JSDoc @param and @returns tags
+✅ Add "In production:" notes for temporary/mock code
+✅ Use bullet points for lists of features or steps
+✅ Group related comments together
+
+### DON'T:
+❌ Write obvious comments that duplicate code
+❌ Leave outdated comments after code changes
+❌ Use inconsistent capitalization in titles
+❌ Skip file header blocks
+❌ Forget to document mock data sources
+❌ Use vague or ambiguous descriptions
+❌ Mix comment styles within the same file
+
+---
+
+## Comment Priorities (in order)
+
+1. **File Header Block** - Required for every file
+2. **Interfaces/Types** - Required for all exported types
+3. **Mock Data** - Required for all test/development data
+4. **Section Dividers** - Highly recommended for organization
+5. **Event Handlers** - Required for all public functions
+6. **Component Sections** - Recommended for complex JSX
+7. **Inline Comments** - Use sparingly for clarification only
+
+---
+
+## Examples by File Type
+
+### Page Components:
+- Must have: File header, interfaces, mock data, section dividers, handler docs, major JSX sections
+
+### UI Components:
+- Must have: File header, props interface, component description, key feature notes
+
+### Utility/Helper Files:
+- Must have: File header, function docs with @param/@returns, usage examples
+
+### Configuration Files:
+- Must have: File header, constant documentation, environment notes
